@@ -16,6 +16,7 @@ public class LoginBean {
 	public String deslogar() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getExternalContext().getSessionMap().remove("usuarioLogado");
+		context.getExternalContext().getSessionMap().remove("shoppingCart");
 		return "login?faces-redirect=true";
 	}
 

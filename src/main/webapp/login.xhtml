@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<ui:composition template="_template.xhtml">
+	<ui:define name="titulo">
+		Acesso Restrito
+	</ui:define>
+	<ui:define name="conteudo">
+		<p:messages globalOnly="true" />
+		<div class="container">
+			<h:form>
+				<div class="form-group">
+					<label for="email">E-mail:</label>
+					<p:inputText id="email" value="#{loginBean.usuario.email}" required="true" styleClass="form-control" title="E-mail cadastrado na loja">
+						<f:passThroughAttribute name="type" value="email" />
+					</p:inputText>
+					<p:message for="email" />
+					<p:tooltip id="emailToolTip" for="email" showEvent="focus" hideEvent="blur" />
+				</div>
+				<div class="form-group">
+					<label for="senha">Senha:</label>
+					<p:password id="senha" value="#{loginBean.usuario.senha}"
+						feedback="true" required="true" styleClass="form-control" />
+					<p:message for="senha" />
+				</div>
+				<div class="form-group">
+					<p:commandButton value="Login" action="#{loginBean.efetuaLogin}" update="@form" process="@form" />
+					&nbsp;
+					<p:link outcome="novo_usuario.jsf" value="Criar Usuário">
+    				</p:link>
+				</div>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

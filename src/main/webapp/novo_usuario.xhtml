@@ -13,7 +13,7 @@
 		<h:form>
 			<div class="form-group">
 				<label for="email">E-mail:</label>
-				<p:inputText id="email" value="#{loginBean.usuario.email}"
+				<p:inputText id="email" value="#{loginBean.email}"
 					required="true" styleClass="form-control">
 					<f:passThroughAttribute name="type" value="email" />
 				</p:inputText>
@@ -21,7 +21,7 @@
 			</div>
 			<div class="form-group">
 				<label for="senha">Senha:</label>
-				<p:password id="senha" value="#{loginBean.usuario.senha}"
+				<p:password id="senha" value="#{loginBean.senha}"
 					feedback="true" required="true" styleClass="form-control" match="confirmacaoSenha" />
 				<p:message for="senha" />
 			</div>

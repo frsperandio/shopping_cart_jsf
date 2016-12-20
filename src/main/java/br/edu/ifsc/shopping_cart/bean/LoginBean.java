@@ -11,8 +11,13 @@ import br.edu.ifsc.shopping_cart.modelo.Usuario;
 @ManagedBean
 @ViewScoped
 public class LoginBean {
-	private Usuario usuario = new Usuario();
-
+	private String email;
+	private String senha;
+	
+	public LoginBean() {
+	
+	}
+	
 	public String deslogar() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getExternalContext().getSessionMap().remove("usuarioLogado");
@@ -22,9 +27,9 @@ public class LoginBean {
 
 	public String efetuaLogin() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		boolean existe = UsuarioDAO.getInstance().existe(this.usuario);
-		if (existe) {
-			context.getExternalContext().getSessionMap().put("usuarioLogado", this.usuario);
+		Usuario usuario = new UsuarioDAO().getByEmailESenha(this.email, this.senha);
+		if (usuario != null) {
+			context.getExternalContext().getSessionMap().put("usuarioLogado", usuario);
 			return "produtos?faces-redirect=true";
 		}
 		else {
@@ -42,10 +47,13 @@ public class LoginBean {
 	
 	public String novoUsuario() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		boolean existe = UsuarioDAO.getInstance().existe(this.usuario);
-		if (!existe) {
-			UsuarioDAO.getInstance().adiciona(this.usuario);
-			context.getExternalContext().getSessionMap().put("usuarioLogado", this.usuario);
+		Usuario usuario = new UsuarioDAO().getByEmail(this.email);
+		if (usuario == null) {
+			usuario = new Usuario();
+			usuario.setEmail(email);
+			usuario.setSenha(senha);
+			new UsuarioDAO().adiciona(usuario);
+			context.getExternalContext().getSessionMap().put("usuarioLogado", usuario);
 			return "produtos?faces-redirect=true";
 		}
 		else {
@@ -55,8 +63,20 @@ public class LoginBean {
 		}
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public String getEmail() {
+		return email;
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 	
 	public boolean getIsLoggedIn() {

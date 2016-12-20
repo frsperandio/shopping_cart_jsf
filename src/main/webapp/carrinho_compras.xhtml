@@ -33,7 +33,7 @@
 						</div>
 						<div class="row">
 							<p:growl id="growl" showDetail="true" life="2000" />
-							<p:commandButton actionListener="#{shoppingCartBean.removeItem(item.id)}" value="Remover" update="growl @form totalAmount" />
+							<p:commandButton actionListener="#{shoppingCartBean.removeItem(item)}" value="Remover" update="growl @form totalAmount" />
 						</div>
 					</h:panelGrid>
 				</p:panel>

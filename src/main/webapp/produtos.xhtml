@@ -32,7 +32,7 @@
 				</p:column>
 				<p:column headerText="">
 					<p:growl id="growl" showDetail="true" life="2000" />
-					<p:commandButton actionListener="#{shoppingCartBean.addItem(produto.id)}" value="Comprar" update="growl totalAmount" />
+					<p:commandButton actionListener="#{shoppingCartBean.addItem(produto)}" value="Comprar" update="growl totalAmount" />
 				</p:column>
 			</p:dataTable>
 		</h:form>

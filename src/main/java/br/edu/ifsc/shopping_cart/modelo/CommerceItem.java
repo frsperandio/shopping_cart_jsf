@@ -1,64 +1,81 @@
 package br.edu.ifsc.shopping_cart.modelo;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
-import br.edu.ifsc.shopping_cart.dao.ProductDAO;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
-public class CommerceItem {
-	//id: String The commerce item id, unique per commerce item, used to identify the commerce item inside the shopping cart.
-	private String id;
+@Entity
+public class CommerceItem extends BaseEntity {
+	private static final long serialVersionUID = -3618340601649116213L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	
-	//product_id: String The product id inside this commerce item.
-	private String productId;
-	
-	//Quantity: Integer The quantity added to the shopping cart.
 	private Integer quantity;
-	
-	//Amount: BigDecimal Item amount, calculated mulitplying quantity by the product price.
+		
 	private BigDecimal amount;
 	
+	@ManyToOne
+	private Product product;
+	
+	@ManyToOne
+	private ShoppingCart shoppingCart;
+	
 	public CommerceItem() {
-		this.id = "";
-		this.productId = "";
-		this.quantity = 0;
-		this.amount = new BigDecimal(0.0);
+				
 	}
 	
-	public String getId() {
+	public CommerceItem(Product product, Integer quantity, BigDecimal amount, ShoppingCart shoppingCart) {
+		this.product = product;
+		this.quantity = quantity;
+		this.amount = amount;
+		this.shoppingCart = shoppingCart;
+	}
+	
+	public Long getId() {
 		return id;
 	}
 
-	public String getProductId() {
-		return productId;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Product getProduct() {
+		return this.product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
-
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	
-	public Product getProduct() {
-		return ProductDAO.getProductById(this.productId);
+
+	public ShoppingCart getShoppingCart() {
+		return shoppingCart;
+	}
+
+	public void setShoppingCart(ShoppingCart shoppingCart) {
+		this.shoppingCart = shoppingCart;
 	}
 }

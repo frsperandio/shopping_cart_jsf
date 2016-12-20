@@ -1,57 +1,90 @@
 package br.edu.ifsc.shopping_cart.dao;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
 
 import br.edu.ifsc.shopping_cart.modelo.BaseEntity;
+import br.edu.ifsc.shopping_cart.util.JPAUtil;
 
 public abstract class DAO<T extends BaseEntity> {
-	protected final Map<Long, T> LISTA;
-
+	private Class<T> classe;
+	protected EntityManager em;
+	
 	public DAO(Class<T> classe) {
-		this.LISTA = new HashMap<>();
+		this.classe = classe;
+		em = new JPAUtil().getEntityManager();
 	}
-
+	
 	public void adiciona(T t) {
 		geraIdEAdiciona(t);
 	}
 
 	public void atualiza(T t) {
-		LISTA.put(t.getId(), t);
+		try {
+			em.getTransaction().begin();
+			em.merge(t);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+			throw e;
+		}
+		finally {
+			em.close();
+		}
 	}
 
 	public T buscaPorId(Long id) {
-		return LISTA.get(id);
+		return em.find(classe, id);
 	}
 
-	public int contaTodos() {
-		return LISTA.size();
+	public Long contaTodos() {
+		Query query = em.createQuery("SELECT COUNT(t) FROM " + classe.toString() + " t");
+		return (Long)query.getSingleResult();
 	}
-
-	abstract void geraDados();
 
 	protected void geraIdEAdiciona(T t) {
-		long id = LISTA.size();
-		t.setId(id);
-		LISTA.put(id, t);
+		try {
+			em.getTransaction().begin();
+			em.persist(t);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+			throw e;
+		}
+		finally {
+			em.close();
+		}
 	}
 
 	public List<T> listaTodos() {
-		return new ArrayList<T>(LISTA.values());
+		CriteriaQuery<T> query = em.getCriteriaBuilder().createQuery(classe);
+		query.select(query.from(classe));
+		List<T> lista = em.createQuery(query).getResultList();
+		return lista;
 	}
 
 	public List<T> listaTodosPaginada(int firstResult, int maxResults) {
-		List<T> lista = new ArrayList<>();
-		for (int i = firstResult + 1; i < firstResult + 1 + maxResults; i++) {
-			lista.add(LISTA.get(i));
-		}
+		CriteriaQuery<T> query = em.getCriteriaBuilder().createQuery(classe);
+		query.select(query.from(classe));
+		List<T> lista = em.createQuery(query).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
 		return lista;
 	}
 
 	public void remove(Long id) {
-		LISTA.remove(id);
+		try {
+			em.getTransaction().begin();
+			em.remove(em.find(classe, id));
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+			throw e;
+		}
+		finally {
+			em.close();
+		}
 	}
 
 	public void remove(T t) {

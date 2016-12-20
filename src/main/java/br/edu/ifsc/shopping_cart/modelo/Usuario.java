@@ -1,13 +1,28 @@
 package br.edu.ifsc.shopping_cart.modelo;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Usuario extends BaseEntity {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8355408176856422816L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	
 	private String email;
+	
 	private String senha;
+	
+	@OneToOne
+	private ShoppingCart shoppingCart;
 
 	public Usuario() {
-		this("", "");
+		
 	}
 
 	public Usuario(String email, String senha) {
